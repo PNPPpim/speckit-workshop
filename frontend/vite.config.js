@@ -15,18 +15,47 @@ export default defineConfig({
     outDir: 'dist',
     minify: 'terser',
     target: 'ES2020',
-    sourcemap: false,
+    sourcemap: process.env.NODE_ENV === 'development',
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true
+      }
+    },
     rollupOptions: {
       output: {
+        // Code splitting for better caching
         manualChunks: {
-          api: ['./src/api.js'],
+          // Core state management
+          state: ['./src/store.js', './src/state-sync.js'],
+          // Data services
+          data: ['./src/data-service.js', './src/cache.js'],
+          // UI components
           components: ['./src/album-list.js', './src/album.js', './src/photo-tile.js'],
-          utils: ['./src/drag-drop.js', './src/db.js']
-        }
+          // Performance utilities
+          performance: ['./src/lazy-load.js'],
+          // API and interactions
+          interactions: ['./src/drag-drop.js', './src/api.js']
+        },
+        // Optimize for chunking
+        chunkFileNames: 'chunks/[name]-[hash].js',
+        entryFileNames: '[name]-[hash].js',
+        assetFileNames: 'assets/[name]-[hash][extname]'
       }
-    }
+    },
+    // Limit chunk size warnings
+    chunkSizeWarningLimit: 500,
+    // Enable CSS code splitting
+    cssCodeSplit: true,
+    // Report compression size
+    reportCompressedSize: true
   },
   preview: {
     port: 4173
+  },
+  // Optimize dependencies
+  optimizeDeps: {
+    include: [],
+    exclude: []
   }
 })

@@ -4,6 +4,7 @@ import { fileURLToPath } from 'url'
 import { initDatabase } from './db.js'
 import albumHandlers from './handlers/albums.js'
 import photoHandlers from './handlers/photos.js'
+import { createMetricsMiddleware, getMetrics, exportMetrics } from './metrics.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -22,12 +23,46 @@ app.use((req, res, next) => {
   next()
 })
 
+// Performance metrics middleware
+app.use(createMetricsMiddleware())
+
 // Initialize database
 await initDatabase()
 
 // Routes
 app.use('/api/albums', albumHandlers)
 app.use('/api/photos', photoHandlers)
+
+// Metrics endpoints
+app.get('/api/metrics', (req, res) => {
+  try {
+    const metrics = getMetrics()
+    res.json(metrics)
+  } catch (error) {
+    console.error('Error retrieving metrics:', error)
+    res.status(500).json({
+      success: false,
+      error: 'Failed to retrieve metrics',
+      details: error.message
+    })
+  }
+})
+
+app.get('/api/metrics/export', (req, res) => {
+  try {
+    const report = exportMetrics()
+    res.setHeader('Content-Type', 'application/json')
+    res.setHeader('Content-Disposition', 'attachment; filename=metrics-report.json')
+    res.send(JSON.stringify(report, null, 2))
+  } catch (error) {
+    console.error('Error exporting metrics:', error)
+    res.status(500).json({
+      success: false,
+      error: 'Failed to export metrics',
+      details: error.message
+    })
+  }
+})
 
 // Health check
 app.get('/api/health', (req, res) => {
