@@ -18,6 +18,7 @@ export const PhotoTile: React.FC<PhotoTileProps> = ({ photo }) => {
       role="img"
       aria-label={photo.title}
       tabIndex={0}
+      data-testid="photo-item"
     >
       <img
         src={photo.url}

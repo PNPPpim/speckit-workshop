@@ -49,7 +49,7 @@ export const AlbumList: React.FC<AlbumListProps> = ({ albums, onReorder }) => {
   };
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container} data-testid="album-list">
       <h1>Photo Albums</h1>
       <p className={styles.subtitle}>Organize photos into albums grouped by date. Drag to reorder.</p>
       <div className={styles.albumList}>
@@ -68,6 +68,7 @@ export const AlbumList: React.FC<AlbumListProps> = ({ albums, onReorder }) => {
             role="button"
             tabIndex={0}
             aria-label={`Album: ${album.title}, ${album.photos.length} photos`}
+            data-testid="album-item"
           >
             <Album album={album} />
           </div>
