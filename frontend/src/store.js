@@ -320,3 +320,19 @@ export function resetState() {
   }
   notifyListeners({}, appState)
 }
+
+// Export store as default object for easier importing
+export const store = {
+  getState,
+  setState,
+  subscribe,
+  updateAlbums,
+  addPhoto,
+  removePhoto,
+  removeAlbum,
+  selectAlbum,
+  isCacheValid,
+  invalidateCache,
+  optimisticUpdate,
+  resetState
+}

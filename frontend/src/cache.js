@@ -288,3 +288,20 @@ export function invalidateAlbumCache(albumId) {
     invalidatePattern(/^(albums|album|photos):/)
   }
 }
+
+// Export cache as object for easier importing
+export const cache = {
+  set,
+  get,
+  isFresh,
+  invalidate,
+  invalidatePattern,
+  staleWhileRevalidate,
+  memoize,
+  cacheAlbums,
+  getCachedAlbums,
+  cachePhotos,
+  getCachedPhotos,
+  invalidateAlbumCache,
+  getStats
+}

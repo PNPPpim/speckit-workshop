@@ -3,13 +3,7 @@
  * Keeps UI in sync with state changes, handles optimistic updates and rollback
  */
 
-import {
-  subscribe,
-  getState,
-  setLoading,
-  setError,
-  optimisticUpdate
-} from './store.js'
+import { store } from './store.js'
 
 // Track current render state
 let currentRenderState = null
@@ -21,14 +15,14 @@ const RENDER_DEBOUNCE_MS = 50 // Wait for multiple updates before rendering
 
 /**
  * Initialize state synchronization
- * @param {Function} renderFn - Function to call when state changes
+ * @param {Function} renderFn - Render callback when state changes
  * @returns {Function} Unsubscribe function
  */
 export function initStateSync(renderFn) {
-  currentRenderState = getState()
+  currentRenderState = store.getState()
 
   // Subscribe to all state changes
-  const unsubscribe = subscribe((oldState, newState) => {
+  const unsubscribe = store.subscribe((oldState, newState) => {
     // Debounce renders to avoid excessive updates
     clearTimeout(renderTimeout)
     renderTimeout = setTimeout(() => {

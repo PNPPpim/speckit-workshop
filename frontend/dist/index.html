@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Photo Album Organizer - Organize photos by date with drag-and-drop albums" />
+  <title>Photo Album Organizer</title>
+  <script type="module" crossorigin src="/index-6CSMKIJ5.js"></script>
+  <link rel="modulepreload" crossorigin href="/chunks/interactions-D4C6ltIZ.js">
+  <link rel="modulepreload" crossorigin href="/chunks/components-BTONn3iY.js">
+  <link rel="modulepreload" crossorigin href="/chunks/state-CNqJMbIC.js">
+  <link rel="modulepreload" crossorigin href="/chunks/data-DHFy62xf.js">
+  <link rel="modulepreload" crossorigin href="/chunks/performance-CKaOrrQD.js">
+  <link rel="stylesheet" crossorigin href="/assets/index-luYKMBs5.css">
+</head>
+<body>
+  <div id="app">
+    <header class="app-header">
+      <div class="header-content">
+        <h1>Photo Album Organizer</h1>
+        <button id="upload-btn" class="btn btn-primary">Upload Photos</button>
+      </div>
+    </header>
+
+    <main class="app-main">
+      <div id="album-list" class="album-list"></div>
+      <div id="loading" class="loading" style="display: none;">
+        <div class="spinner"></div>
+        <p>Loading albums...</p>
+      </div>
+      <div id="error" class="error-message" style="display: none;"></div>
+    </main>
+
+    <input 
+      id="file-input" 
+      type="file" 
+      multiple 
+      accept="image/*" 
+      style="display: none;" 
+      aria-label="Select photos to upload"
+    />
+  </div>
+
+</body>
+</html>
