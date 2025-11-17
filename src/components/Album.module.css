@@ -1,0 +1,44 @@
+.album {
+  margin-bottom: 40px;
+}
+
+.albumHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.title {
+  font-size: 24px;
+  color: #222;
+  margin: 0;
+  border-bottom: 3px solid #007bff;
+  padding-bottom: 8px;
+  flex: 1;
+}
+
+.photoCount {
+  font-size: 14px;
+  color: #666;
+  background: #f0f0f0;
+  padding: 4px 12px;
+  border-radius: 16px;
+  white-space: nowrap;
+}
+
+.photoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.emptyAlbum {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 40px;
+  color: #999;
+  font-size: 14px;
+}
+

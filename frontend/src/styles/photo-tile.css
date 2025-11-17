@@ -1,0 +1,103 @@
+/* Photo Tile Styles */
+.photo-tile {
+  position: relative;
+  background: #f9f9f9;
+  border-radius: 6px;
+  overflow: hidden;
+  aspect-ratio: 1;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 2px solid transparent;
+}
+
+.photo-tile:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-color: #667eea;
+}
+
+.photo-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: linear-gradient(135deg, #e0e0e0, #f5f5f5);
+}
+
+.photo-image.loading {
+  opacity: 0.5;
+}
+
+.photo-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+  padding: 0.75rem;
+  transform: translateY(100%);
+  transition: transform 0.2s ease;
+}
+
+.photo-tile:hover .photo-overlay {
+  transform: translateY(0);
+}
+
+.photo-title {
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.photo-actions {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  display: flex;
+  gap: 0.25rem;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.photo-tile:hover .photo-actions {
+  opacity: 1;
+}
+
+.photo-btn {
+  background: rgba(0, 0, 0, 0.6);
+  border: none;
+  color: white;
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.photo-btn:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.photo-btn.delete:hover {
+  background: #f44336;
+}
+
+@media (max-width: 768px) {
+  .photo-tile {
+    aspect-ratio: 1;
+  }
+
+  .photo-overlay {
+    transform: translateY(0);
+  }
+
+  .photo-actions {
+    opacity: 1;
+  }
+}

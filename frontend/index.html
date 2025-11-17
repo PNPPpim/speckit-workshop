@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Photo Album Organizer - Organize photos by date with drag-and-drop albums" />
+  <title>Photo Album Organizer</title>
+  <link rel="stylesheet" href="/src/styles/main.css" />
+</head>
+<body>
+  <div id="app">
+    <header class="app-header">
+      <div class="header-content">
+        <h1>Photo Album Organizer</h1>
+        <button id="upload-btn" class="btn btn-primary">Upload Photos</button>
+      </div>
+    </header>
+
+    <main class="app-main">
+      <div id="album-list" class="album-list"></div>
+      <div id="loading" class="loading" style="display: none;">
+        <div class="spinner"></div>
+        <p>Loading albums...</p>
+      </div>
+      <div id="error" class="error-message" style="display: none;"></div>
+    </main>
+
+    <input 
+      id="file-input" 
+      type="file" 
+      multiple 
+      accept="image/*" 
+      style="display: none;" 
+      aria-label="Select photos to upload"
+    />
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

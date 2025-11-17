@@ -1,0 +1,22 @@
+{
+  "name": "photo-album-organizer-backend",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Express backend for Photo Album Organizer with SQLite",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test": "jest"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "sqlite3": "^5.1.6",
+    "multer": "^1.4.5-lts.1",
+    "sharp": "^0.32.6"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^6.3.3"
+  }
+}
