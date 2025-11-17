@@ -124,9 +124,63 @@ const createApiMock = () => {
 
 describe('Frontend API Client', () => {
   let api
+  let fetchMock
 
   beforeEach(() => {
+    // Create a fetch mock that tracks calls
+    fetchMock = {
+      calls: [],
+      responses: [],
+      errors: [],
+      responseIndex: 0,
+      errorIndex: 0,
+      mockResolvedValueOnce(value) {
+        this.responses.push(value)
+      },
+      mockResolvedValue(value) {
+        this.responses = [value]
+      },
+      mockRejectedValueOnce(error) {
+        this.errors.push(error)
+      },
+      async call(url, options) {
+        this.calls.push({ url, options })
+        // Check if we have an error to throw
+        if (this.errors.length > 0 && this.errorIndex < this.errors.length) {
+          const error = this.errors[this.errorIndex]
+          this.errorIndex++
+          throw error
+        }
+        if (this.responses.length > 0) {
+          const response = this.responses[this.responseIndex]
+          this.responseIndex = Math.min(this.responseIndex + 1, this.responses.length - 1)
+          return response
+        }
+        throw new Error('No mock response configured')
+      }
+    }
+    
+    // Replace global fetch with our mock
+    const originalFetch = global.fetch
+    global.fetch = fetchMock.call.bind(fetchMock)
+    // Attach methods to global.fetch
+    global.fetch.mockResolvedValueOnce = fetchMock.mockResolvedValueOnce.bind(fetchMock)
+    global.fetch.mockResolvedValue = fetchMock.mockResolvedValue.bind(fetchMock)
+    global.fetch.mockRejectedValueOnce = fetchMock.mockRejectedValueOnce.bind(fetchMock)
+    global.fetch.calls = fetchMock.calls
+    
     api = createApiMock()
+  })
+
+  afterEach(() => {
+    // Clear mock state
+    if (fetchMock) {
+      fetchMock.calls = []
+      fetchMock.responses = []
+      fetchMock.errors = []
+      fetchMock.responseIndex = 0
+      fetchMock.errorIndex = 0
+    }
   })
 
   describe('Album Operations', () => {
@@ -310,8 +364,8 @@ describe('Frontend API Client', () => {
 
       await api.createAlbum('Album', '2024-11-17')
 
-      const call = global.fetch.mock.calls[0]
-      expect(call[1].headers['Content-Type']).toBe('application/json')
+      const call = fetchMock.calls[0]
+      expect(call.options.headers['Content-Type']).toBe('application/json')
     })
 
     it('should use FormData for photo upload', async () => {
@@ -323,8 +377,8 @@ describe('Frontend API Client', () => {
       const file = new File(['content'], 'photo.jpg')
       await api.uploadPhoto('album1', file, 'Photo')
 
-      const call = global.fetch.mock.calls[0]
-      expect(call[1].body).toBeInstanceOf(FormData)
+      const call = fetchMock.calls[0]
+      expect(call.options.body).toBeInstanceOf(FormData)
     })
   })
 
@@ -336,7 +390,7 @@ describe('Frontend API Client', () => {
       })
 
       await api.fetchAlbums()
-      expect(global.fetch).toHaveBeenCalledWith('/api/albums', expect.anything())
+      expect(fetchMock.calls[0].url).toBe('/api/albums')
     })
 
     it('should construct correct photos fetch URL', async () => {
@@ -346,7 +400,7 @@ describe('Frontend API Client', () => {
       })
 
       await api.fetchPhotos('album123')
-      expect(global.fetch).toHaveBeenCalledWith('/api/photos/album/album123', expect.anything())
+      expect(fetchMock.calls[0].url).toBe('/api/photos/album/album123')
     })
 
     it('should construct correct delete album URL', async () => {
@@ -356,7 +410,7 @@ describe('Frontend API Client', () => {
       })
 
       await api.deleteAlbum('album123')
-      expect(global.fetch).toHaveBeenCalledWith('/api/albums/album123', expect.anything())
+      expect(fetchMock.calls[0].url).toBe('/api/albums/album123')
     })
 
     it('should construct correct delete photo URL', async () => {
@@ -366,7 +420,7 @@ describe('Frontend API Client', () => {
       })
 
       await api.deletePhoto('photo123')
-      expect(global.fetch).toHaveBeenCalledWith('/api/photos/photo123', expect.anything())
+      expect(fetchMock.calls[0].url).toBe('/api/photos/photo123')
     })
   })
 
@@ -378,7 +432,8 @@ describe('Frontend API Client', () => {
       })
 
       await api.fetchAlbums()
-      expect(global.fetch.mock.calls[0][1].method).toBeUndefined() // GET is default
+      // GET is default, so method is undefined
+      expect(fetchMock.calls[0].options?.method).toBeUndefined()
     })
 
     it('should use POST for create operations', async () => {
@@ -388,7 +443,7 @@ describe('Frontend API Client', () => {
       })
 
       await api.createAlbum('Album', '2024-11-17')
-      expect(global.fetch.mock.calls[0][1].method).toBe('POST')
+      expect(fetchMock.calls[0].options.method).toBe('POST')
     })
 
     it('should use PUT for update operations', async () => {
@@ -398,7 +453,7 @@ describe('Frontend API Client', () => {
       })
 
       await api.updateAlbum('1', 'Album', '2024-11-17')
-      expect(global.fetch.mock.calls[0][1].method).toBe('PUT')
+      expect(fetchMock.calls[0].options.method).toBe('PUT')
     })
 
     it('should use DELETE for delete operations', async () => {
@@ -408,7 +463,7 @@ describe('Frontend API Client', () => {
       })
 
       await api.deleteAlbum('1')
-      expect(global.fetch.mock.calls[0][1].method).toBe('DELETE')
+      expect(fetchMock.calls[0].options.method).toBe('DELETE')
     })
   })
 })

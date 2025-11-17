@@ -329,14 +329,28 @@ describe('Frontend Lazy Loading Module', () => {
 
     it('should handle observer creation errors', () => {
       const originalIO = global.IntersectionObserver
+      let errorThrown = false
+      
+      // Create a mock container
+      const container = document.createElement('div')
+      const img = document.createElement('img')
+      img.setAttribute('data-src', 'test.jpg')
+      container.appendChild(img)
+      
       global.IntersectionObserver = class MockIO {
         constructor() {
           throw new Error('Observer error')
         }
       }
       
-      expect(() => lazyLoader.initLazyLoading()).toThrow()
+      try {
+        lazyLoader.initLazyLoading(container)
+      } catch (err) {
+        errorThrown = true
+        expect(err.message).toContain('Observer error')
+      }
       
+      expect(errorThrown).toBe(true)
       global.IntersectionObserver = originalIO
     })
   })
